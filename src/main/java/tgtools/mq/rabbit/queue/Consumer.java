@@ -17,6 +17,7 @@ public class Consumer extends AbstractConsumer {
     public Consumer() {
     }
 
+    @Override
     public void init(Connection pConnection) throws APPErrorException {
         init(pConnection,getQueueName(),getMessageListening());
     }

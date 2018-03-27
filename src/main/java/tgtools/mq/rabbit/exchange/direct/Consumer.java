@@ -49,13 +49,13 @@ public class Consumer extends AbstractConsumer {
 
     public void init(Connection pConnection, String pQueueName, String pExchangeName, String pRouteKey, IMessageListener pMessage) throws APPErrorException {
         try {
-            Consumer consumer = new Consumer();
+           // Consumer consumer = new Consumer();
             setQueueName(pQueueName);
             setExchangeName(pExchangeName);
             setRoutingKey(pRouteKey);
             setMessageListening(pMessage);
             setChannel(pConnection.createChannel());
-            consumer.createDefaultConsumer(getChannel());
+            createDefaultConsumer(getChannel());
             queueDeclare();
         } catch (Exception e) {
             throw new APPErrorException("创建Channel出错；原因：" + e.getMessage(), e);

@@ -53,6 +53,11 @@
             <artifactId>tgtools.core</artifactId>
             <version>1.0.275</version>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>RELEASE</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
