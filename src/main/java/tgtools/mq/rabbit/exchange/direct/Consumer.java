@@ -49,7 +49,6 @@ public class Consumer extends AbstractConsumer {
 
     public void init(Connection pConnection, String pQueueName, String pExchangeName, String pRouteKey, IMessageListener pMessage) throws APPErrorException {
         try {
-           // Consumer consumer = new Consumer();
             setQueueName(pQueueName);
             setExchangeName(pExchangeName);
             setRoutingKey(pRouteKey);

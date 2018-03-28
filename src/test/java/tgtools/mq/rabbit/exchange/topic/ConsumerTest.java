@@ -1,27 +1,28 @@
-package tgtools.mq.rabbit.queue;
-
+package tgtools.mq.rabbit.exchange.topic;
 
 import com.rabbitmq.client.ConnectionFactory;
 import org.junit.Test;
 import tgtools.mq.rabbit.SingleConnectionFactory;
 import tgtools.mq.rabbit.entity.Message;
+import tgtools.mq.rabbit.exchange.direct.Consumer;
 import tgtools.mq.rabbit.listen.IMessageListener;
 import tgtools.tasks.Task;
 import tgtools.tasks.TaskContext;
 import tgtools.tasks.TaskRunner;
 
+import static org.junit.Assert.*;
+
 /**
  * @author 田径
  * @Title
  * @Description
- * @date 20:13
+ * @date 15:10
  */
 public class ConsumerTest {
-
     @Test
     public void startListen() {
         String name = "tg1";
-        String queueName = "rabbitMQ.test";
+        String queueName = "client.tengjie";
         //创建连接工厂
         ConnectionFactory factory = new ConnectionFactory();
         //设置RabbitMQ相关信息
@@ -32,17 +33,15 @@ public class ConsumerTest {
 
         SingleConnectionFactory.add(name, factory);
 
-        //ProducerTask task1 =new ProducerTask(name,queueName);
-        ConsumerTask task2 = new ConsumerTask(name, queueName);
+        ConsumerTask task1 =new ConsumerTask(name,queueName);
+        ConsumerTask task2 = new ConsumerTask(name, "client.wangding");
         TaskRunner<Task> ss = new TaskRunner<Task>();
-        //ss.add(task1);
+        ss.add(task1);
         ss.add(task2);
         ss.runThreadTillEnd();
         System.out.println("all end");
         SingleConnectionFactory.clear();
     }
-
-
 
     private static class ConsumerTask extends Task {
         private String mName;
@@ -63,7 +62,7 @@ public class ConsumerTest {
             String text = "tianjing message";
             Consumer consumer = new Consumer();
             try {
-                consumer.init(SingleConnectionFactory.get(mName), mQueueName, new IMessageListener() {
+                consumer.init(SingleConnectionFactory.get(mName), mQueueName,"client","client.#", new IMessageListener() {
                     @Override
                     public void onMessage(Message messages) {
                         try {
@@ -78,8 +77,8 @@ public class ConsumerTest {
                         }
                     }
                 });
-                consumer.basicQos(0,1,false);
-                consumer.startListen();
+                // consumer.basicQos(0,1,false);
+                // consumer.startListen();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -95,5 +94,4 @@ public class ConsumerTest {
             System.out.println("this end");
         }
     }
-
 }

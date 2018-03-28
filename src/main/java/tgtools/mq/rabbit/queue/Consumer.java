@@ -27,11 +27,20 @@ public class Consumer extends AbstractConsumer {
             setChannel(pConnection.createChannel());
             setQueueName(pQueueName);
             setMessageListening(pMessage);
+            queueDeclare();
             createDefaultConsumer(getChannel());
         } catch (Exception e) {
             throw new APPErrorException("初始化Channel出错；原因：" + e.getMessage(), e);
         }
     }
 
+    protected void queueDeclare() throws APPErrorException {
+        try {
+            getChannel().queueDeclare(getQueueName(), true, false, false, null);
+        }catch (Exception e)
+        {
+            throw new APPErrorException("绑定 queue:"+getQueueName()+"失败；原因："+e.getMessage(),e);
+        }
+    }
 
 }

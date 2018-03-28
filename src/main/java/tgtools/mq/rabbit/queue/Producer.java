@@ -1,9 +1,12 @@
 package tgtools.mq.rabbit.queue;
 
+import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Connection;
 import tgtools.exceptions.APPErrorException;
 import tgtools.mq.rabbit.AbstractProducer;
+import tgtools.util.StringUtil;
 
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -15,6 +18,8 @@ import java.util.Map;
 public class Producer extends AbstractProducer {
     public Producer() {
     }
+
+
 
     public void init(Connection pConnection, String pQueueName, boolean pDurable, boolean pExclusive, boolean pAutoDelete,
                      Map<String, Object> pArguments) throws APPErrorException {

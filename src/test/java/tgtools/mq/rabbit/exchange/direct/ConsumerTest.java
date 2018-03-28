@@ -1,5 +1,4 @@
-package tgtools.mq.rabbit.queue;
-
+package tgtools.mq.rabbit.exchange.direct;
 
 import com.rabbitmq.client.ConnectionFactory;
 import org.junit.Test;
@@ -10,14 +9,14 @@ import tgtools.tasks.Task;
 import tgtools.tasks.TaskContext;
 import tgtools.tasks.TaskRunner;
 
+
 /**
  * @author 田径
  * @Title
  * @Description
- * @date 20:13
+ * @date 13:45
  */
 public class ConsumerTest {
-
     @Test
     public void startListen() {
         String name = "tg1";
@@ -42,8 +41,6 @@ public class ConsumerTest {
         SingleConnectionFactory.clear();
     }
 
-
-
     private static class ConsumerTask extends Task {
         private String mName;
         private String mQueueName;
@@ -63,7 +60,7 @@ public class ConsumerTest {
             String text = "tianjing message";
             Consumer consumer = new Consumer();
             try {
-                consumer.init(SingleConnectionFactory.get(mName), mQueueName, new IMessageListener() {
+                consumer.init(SingleConnectionFactory.get(mName), mQueueName,mQueueName,mQueueName, new IMessageListener() {
                     @Override
                     public void onMessage(Message messages) {
                         try {
@@ -78,8 +75,8 @@ public class ConsumerTest {
                         }
                     }
                 });
-                consumer.basicQos(0,1,false);
-                consumer.startListen();
+               // consumer.basicQos(0,1,false);
+               // consumer.startListen();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -95,5 +92,4 @@ public class ConsumerTest {
             System.out.println("this end");
         }
     }
-
 }

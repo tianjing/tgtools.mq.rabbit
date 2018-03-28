@@ -1,4 +1,4 @@
-package tgtools.mq.rabbit.queue;
+package tgtools.mq.rabbit.exchange.topic;
 
 import com.rabbitmq.client.ConnectionFactory;
 import org.junit.Test;
@@ -14,15 +14,14 @@ import static org.junit.Assert.*;
  * @author 田径
  * @Title
  * @Description
- * @date 20:16
+ * @date 15:10
  */
 public class ProducerTest {
-
     @Test
     public void startSendMessage()
     {
         String name = "tg1";
-        String queueName = "client.tengjie";
+        String queueName = "client.#";
         //创建连接工厂
         ConnectionFactory factory = new ConnectionFactory();
         //设置RabbitMQ相关信息
@@ -33,15 +32,13 @@ public class ProducerTest {
         SingleConnectionFactory.add(name, factory);
 
         ProducerTask task1 = new ProducerTask(name, queueName);
-        //ConsumerTask task2 =new ConsumerTask(name,queueName);
         TaskRunner<Task> ss = new TaskRunner<Task>();
         ss.add(task1);
-        //ss.add(task2);
         ss.runThreadTillEnd();
         System.out.println("all end");
         SingleConnectionFactory.clear();
-
     }
+
     private static class ProducerTask extends Task {
         private String mName;
         private String mQueueName;
@@ -61,22 +58,28 @@ public class ProducerTest {
             String text = "tianjing message";
 
             Producer producer = new Producer();
+            producer.setExchangeName("client");
+            producer.setRouteKey("client.#");
             try {
-                producer.init(SingleConnectionFactory.get(mName), mQueueName);
+                producer.init(SingleConnectionFactory.get(mName),"","");
             } catch (APPErrorException e) {
                 e.printStackTrace();
             }
 
+
+            for (int i = 0; i < 10; i++) {
+                if (isCancel()) {
+                    break;
+                }
                 try {
                     producer.send(text);
                     System.out.println("send messaged");
                     Thread.sleep(5000);
                 } catch (Exception e) {
-                e.printStackTrace();
                     System.out.println("send messaged error");
                 }
 
-
+            }
             if (null != producer) {
                 producer.Dispose();
             }
