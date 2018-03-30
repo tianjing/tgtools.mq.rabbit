@@ -9,6 +9,7 @@ import tgtools.util.LogHelper;
 import tgtools.util.StringUtil;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author 田径
@@ -23,7 +24,6 @@ public abstract class AbstractConsumer implements IDispose {
     private MyDefaultConsumer mDefaultConsumer = null;
     private IMessageListener mMessageListening = null;
     private String mConsumerTag=null;
-
 
     public Channel getChannel() {
         return mChannel;

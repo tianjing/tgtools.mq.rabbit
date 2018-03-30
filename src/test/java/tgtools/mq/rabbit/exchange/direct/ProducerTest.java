@@ -3,6 +3,7 @@ package tgtools.mq.rabbit.exchange.direct;
 import com.rabbitmq.client.ConnectionFactory;
 import org.junit.Test;
 import tgtools.exceptions.APPErrorException;
+import tgtools.json.JSONObject;
 import tgtools.mq.rabbit.SingleConnectionFactory;
 import tgtools.mq.rabbit.queue.Producer;
 import tgtools.tasks.Task;
@@ -22,13 +23,14 @@ public class ProducerTest {
     public void startSendMessage()
     {
         String name = "tg1";
-        String queueName = "client.#";
+        String queueName = "client.system";
         //创建连接工厂
         ConnectionFactory factory = new ConnectionFactory();
         //设置RabbitMQ相关信息
         factory.setHost("192.168.88.134");
         factory.setUsername("user");
         factory.setPassword("user123");
+        factory.setVirtualHost("/user");
         SingleConnectionFactory.add(name, factory);
 
         ProducerTask task1 = new ProducerTask(name, queueName);
@@ -56,8 +58,20 @@ public class ProducerTest {
         @Override
         public void run(TaskContext taskContext) {
             String text = "tianjing message";
+            try {
+                JSONObject json = new JSONObject();
+                json.put("sender", "SYSTEM");
+                json.put("content", text);
 
-           Producer producer = new Producer();
+                text=json.toString();
+            }
+            catch (Exception e)
+            {
+
+            }
+
+
+            Producer producer = new Producer();
             try {
                 producer.init(SingleConnectionFactory.get(mName), mQueueName);
             } catch (APPErrorException e) {

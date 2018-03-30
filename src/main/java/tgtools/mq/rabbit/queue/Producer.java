@@ -44,5 +44,12 @@ public class Producer extends AbstractProducer {
     public void init(Connection pConnection) throws APPErrorException {
         init(pConnection, getQueueName(), true, false, false, null);
     }
-
+    @Override
+    public void send(byte[] pMessage, AMQP.BasicProperties pBasicProperties) throws APPErrorException {
+        try {
+            getChannel().basicPublish(getQueueName(), StringUtil.EMPTY_STRING, pBasicProperties, pMessage);
+        } catch (IOException e) {
+            throw new APPErrorException("发送队列失败", e);
+        }
+    }
 }
