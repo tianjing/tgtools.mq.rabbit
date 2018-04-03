@@ -17,10 +17,12 @@ import java.util.Map;
  */
 public class Producer extends AbstractProducer {
 
-    public Producer() {
-    }
     private String mExchangeName;
     private String mRoutingKey;
+
+    public Producer() {
+    }
+
     public String getExchangeName() {
         return mExchangeName;
     }
@@ -37,28 +39,30 @@ public class Producer extends AbstractProducer {
         mRoutingKey = pRoutingKey;
     }
 
-    public void init(Connection pConnection, String pExchangeName, String pRoutingKey) throws APPErrorException {
+    public void init(Connection pConnection, String pExchangeName, String pRoutingKey,
+                     boolean pDurable) throws APPErrorException {
+        init(pConnection,pExchangeName,pRoutingKey,pDurable,false,false,null);
+    }
+
+    public void init(Connection pConnection, String pExchangeName, String pRoutingKey,
+                     boolean pDurable, boolean pExclusive, boolean pAutoDelete,
+                     Map<String, Object> pArguments) throws APPErrorException {
 
         try {
             setChannel(pConnection.createChannel());
             setExchangeName(pExchangeName);
             setRoutingKey(pRoutingKey);
-            queueDeclare();
+            queueDeclare(pDurable, pExclusive, pAutoDelete, pArguments);
         } catch (Exception e) {
             throw new APPErrorException("创建出错！原因：" + e.getMessage(), e);
         }
     }
+
     @Override
     public void init(Connection pConnection) throws APPErrorException {
-        init(pConnection,getExchangeName(),getRoutingKey());
+        init(pConnection, getExchangeName(), getRoutingKey(), true);
     }
-    protected void queueDeclare() throws APPErrorException {
-        try {
-            getChannel().exchangeDeclare(mExchangeName, BuiltinExchangeType.DIRECT);
-        } catch (IOException e) {
-            throw new APPErrorException("定义队列出错！");
-        }
-    }
+
 
     @Override
     protected void queueDeclare(boolean pDurable, boolean pExclusive, boolean pAutoDelete,
@@ -78,8 +82,6 @@ public class Producer extends AbstractProducer {
             throw new APPErrorException("发送队列失败", e);
         }
     }
-
-
 
 
 }

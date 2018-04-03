@@ -35,14 +35,7 @@ public class Producer extends tgtools.mq.rabbit.exchange.direct.Producer {
         mRouteKey = pRouteKey;
     }
 
-    @Override
-    protected void queueDeclare() throws APPErrorException {
-        try {
-            getChannel().exchangeDeclare(getExchangeName(), BuiltinExchangeType.TOPIC);
-        } catch (IOException e) {
-            throw new APPErrorException("定义队列出错！");
-        }
-    }
+
 
     @Override
     protected void queueDeclare(boolean pDurable, boolean pExclusive, boolean pAutoDelete,
