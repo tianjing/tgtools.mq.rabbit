@@ -8,6 +8,7 @@ import tgtools.interfaces.IDispose;
 import tgtools.util.LogHelper;
 import tgtools.util.StringUtil;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.util.Map;
 
@@ -17,7 +18,7 @@ import java.util.Map;
  * @Description
  * @date 9:24
  */
-public abstract class AbstractProducer implements IDispose {
+public abstract class AbstractProducer implements IDispose,Closeable {
 
     private Channel mChannel;
     private String mQueueName;
@@ -86,5 +87,10 @@ public abstract class AbstractProducer implements IDispose {
             }
         }
         mChannel=null;
+    }
+    @Override
+    public void close()
+    {
+        Dispose();
     }
 }
